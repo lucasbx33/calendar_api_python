@@ -4,12 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+    <!-- Inclure la bibliothèque Google Sign-In -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+  
+    <!-- Inclure votre clé API -->
+    <meta name="google-signin-client_id" content="534376135176-vuhui2dne1pruckm8i8vsa0nh06sf643.apps.googleusercontent.com">
+  
+  
 </head>
 <body>
   <h1>ABOUT !!!!</h1>
 
     <p>ADMIN TOOLBAR</p>
     <p>USER TOOLBAR</p>
+
+    <body>
+         
+      <!-- Div pour afficher le bouton de connexion Google -->
+      <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+      <!-- Script pour gérer la connexion réussie -->
+      <script>
+        function onSignIn(googleUser) {
+          // Code à exécuter lorsque la connexion est réussie
+          var profile = googleUser.getBasicProfile();
+          console.log('ID: ' + profile.getId()); // ID de l'utilisateur
+          console.log('Nom: ' + profile.getName()); // Nom de l'utilisateur
+          console.log('Image URL: ' + profile.getImageUrl()); // URL de l'image du profil de l'utilisateur
+          console.log('Email: ' + profile.getEmail()); // Email de l'utilisateur
+        }
+      </script>
+    </body>
+    
 
 </body>
 </html>
