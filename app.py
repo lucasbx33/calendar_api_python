@@ -4,6 +4,9 @@ import os
 from googleapiclient.discovery import build
 import datetime
 from google.oauth2 import credentials as google_credentials
+from pathlib import Path
+
+secret_path = Path(__file__).resolve().parent / "client_secret.json"
 
 app = Flask(__name__)
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
@@ -19,7 +22,7 @@ def about():
 @app.route('/login')
 def login():
     flow = Flow.from_client_secrets_file(
-        'client_secret.json',
+        secret_path,
         scopes=['https://www.googleapis.com/auth/calendar'],
         redirect_uri=url_for('oauth2callback', _external=True))
 
@@ -39,7 +42,7 @@ def oauth2callback():
         return "État de session manquant", 400
 
     flow = Flow.from_client_secrets_file(
-        'client_secret.json',
+        secret_path,
         scopes=['https://www.googleapis.com/auth/calendar'],
         state=state,
         redirect_uri=url_for('oauth2callback', _external=True))
