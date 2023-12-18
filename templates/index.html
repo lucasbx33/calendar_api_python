@@ -3,19 +3,22 @@
 <head>
     <title>Python Calendar</title>
     <style>
+       
+
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #d9d9d9;
             text-align: center;
             padding: 50px;
         }
 
         h1 {
-            color: #333;
+            color: #000033;
+            margin-bottom: 50px;
         }
 
         .login-button {
-            background-color: #4CAF50;
+            background-color:  #000033;
             color: white;
             padding: 15px 25px;
             border: none;
@@ -24,6 +27,7 @@
             font-size: 16px;
             margin-top: 20px;
             border-radius: 15px;
+            box-shadow: 0 20px 20px -12px rgb(0 0 0 / 2.0);
         }
 
         .login-button:hover {
@@ -33,12 +37,14 @@
         img{
           width: 20%;
           border-radius: 50px;
+          margin-bottom: 20px;
+          box-shadow: 0 30px 50px -12px rgb(0 0 0 / 2.0);
         }
     </style>
 </head>
 <body>
   <img src="{{ url_for('static', filename='logo.png') }}" alt="Mon Logo">
-  <h1>Python Calendar</h1>
+  <h1><strong>Python Calendar</strong></h1>
     <a href="/login" class="login-button">Connexion</a>
 </body>
 </html>
