@@ -62,6 +62,10 @@ def show_events():
 
     return render_template('events.html', events=events)
 
+def format_date(date_str):
+    date_obj = datetime.datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S%z')
+    return date_obj.strftime('%d/%m/%Y %H:%M')
+
 def credentials_to_dict(credentials):
     return {'token': credentials.token,
             'refresh_token': credentials.refresh_token,
@@ -78,7 +82,15 @@ def list_upcoming_events(service, max_results=10):
     events_result = service.events().list(calendarId='primary', timeMin=now,
                                           maxResults=max_results, singleEvents=True,
                                           orderBy='startTime').execute()
-    return events_result.get('items', [])
+    events = events_result.get('items', [])
+
+    for event in events:
+        if 'dateTime' in event['start']:
+            event['start']['dateTime'] = format_date(event['start']['dateTime'])
+        if 'dateTime' in event['end']:
+            event['end']['dateTime'] = format_date(event['end']['dateTime'])
+
+    return events
 
 if __name__ == "__main__":
     app.run(debug=True)
