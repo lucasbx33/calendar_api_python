@@ -11,9 +11,17 @@
         <ul>
             {% for event in events %}
                 <li>
-                    <strong>{{ event.summary }}</strong>: 
-                    de {{ event.start.dateTime | default('Date non spécifiée') }} 
-                    à {{ event.end.dateTime | default('Date non spécifiée') }}
+                    {% if event.start.dateTime == null and event.end.dateTime == null %}
+                        <strong>{{ event.summary }}</strong>
+                    {% else %}
+                        <strong>{{ event.summary }}</strong>:
+                        {% if event.start.dateTime %}
+                            de {{ event.start.dateTime}} 
+                        {% endif %}
+                        {% if event.end.dateTme %}
+                            à {{ event.end.dateTime}}
+                        {% endif %}
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>
