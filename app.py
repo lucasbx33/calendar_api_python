@@ -95,5 +95,32 @@ def list_upcoming_events(service, max_results=10):
 
     return events
 
+@app.route('/create_event', methods=['POST'])
+def create_event():
+    # Vérifiez si l'utilisateur est connecté
+    if 'credentials' not in session:
+        return redirect(url_for('login'))
+
+    #récupérer 
+    title = request.form.get('title')
+    start_date_str = request.form.get('date')
+
+    # Convertir la date au format attendu par Google Calendar
+    start_datetime = datetime.datetime.fromisoformat(start_date_str)
+    end_datetime = start_datetime + datetime.timedelta(hours=1)  # Ajoutez une durée par défaut
+
+    event = {
+        'summary': title,
+        'start': {'dateTime': start_datetime.isoformat(), 'timeZone': 'Europe/Paris'},
+        'end': {'dateTime': end_datetime.isoformat(), 'timeZone': 'Europe/Paris'}
+    }
+
+    # créer l'événement via l'api
+    credentials = google_credentials.Credentials(**session['credentials'])
+    service = create_calendar_service(credentials)
+    service.events().insert(calendarId='primary', body=event).execute()
+
+    return redirect(url_for('show_events'))
+
 if __name__ == "__main__":
     app.run(debug=True)

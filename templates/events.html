@@ -18,7 +18,7 @@
                         {% if event.start.dateTime %}
                             de {{ event.start.dateTime}} 
                         {% endif %}
-                        {% if event.end.dateTme %}
+                        {% if event.end.dateTime %}
                             à {{ event.end.dateTime}}
                         {% endif %}
                     {% endif %}
@@ -28,5 +28,16 @@
     {% else %}
         <p>Aucun événement à venir trouvé.</p>
     {% endif %}
+    <h1>créer un événement</h1>
+    <form action="{{ url_for('create_event') }}" method="post">
+        <label for="title">Titre de l'événement :</label>
+        <input type="text" id="title" name="title" required>
+    
+        <label for="date">Date de l'événement :</label>
+        <input type="datetime-local" id="date" name="date" required>
+    
+        <input type="submit" value="Créer l'événement">
+    </form>
+    
 </body>
 </html>
