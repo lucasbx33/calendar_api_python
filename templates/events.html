@@ -4,6 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Événements à venir</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        h1 {
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+
+        strong {
+            
+            margin-bottom: 5px;
+        }
+
+        div {
+            display : flex;
+        }
+
+       form{
+        text-align: center;
+       }
+
+       #title{
+        margin-bottom: 10px;
+        border-radius: 5px;
+       }
+
+         #date{
+          margin-bottom: 10px;
+          border-radius: 5px;
+         }
+
+         .event{
+          margin-bottom: 10px;
+          border-radius: 5px;
+         }
+
+         footer{
+          text-align: center;
+          margin-top: 50px;
+         }
+    </style>
 </head>
 <body>
     <h1>Événements à venir dans votre Google Calendar</h1>
@@ -12,14 +68,14 @@
             {% for event in events %}
                 <li>
                     {% if event.start.dateTime == null and event.end.dateTime == null %}
-                        <strong>{{ event.summary }}</strong>
+                        <h3><strong>{{ event.summary }}</strong></h3>
                     {% else %}
-                        <strong>{{ event.summary }}</strong>:
+                        <h3><strong>{{ event.summary }}</strong></h3>
                         {% if event.start.dateTime %}
-                            de {{ event.start.dateTime}} 
+                            <div><strong>Date de début :</strong> {{ event.start.dateTime}}</div>
                         {% endif %}
                         {% if event.end.dateTime %}
-                            à {{ event.end.dateTime}}
+                            <div><strong>Date de fin :</strong> {{ event.end.dateTime}}</div>
                         {% endif %}
                     {% endif %}
                 </li>
@@ -28,16 +84,20 @@
     {% else %}
         <p>Aucun événement à venir trouvé.</p>
     {% endif %}
-    <h1>créer un événement</h1>
+    <h1>Créer un événement</h1>
     <form action="{{ url_for('create_event') }}" method="post">
         <label for="title">Titre de l'événement :</label>
         <input type="text" id="title" name="title" required>
-    
+    <br>
         <label for="date">Date de l'événement :</label>
         <input type="datetime-local" id="date" name="date" required>
-    
-        <input type="submit" value="Créer l'événement">
+    <br>
+        <input id="event" type="submit" value="Créer l'événement">
     </form>
-    
+
+    <footer>
+        <p>Ce site a été créé par <strong>JARDY Anthony</strong> & <strong>REYNAUD Lucas</strong></p>
+        <p>Projet de développement Python 2023.</p>
+    </footer>
 </body>
 </html>
