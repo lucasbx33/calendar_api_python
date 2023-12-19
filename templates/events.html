@@ -59,6 +59,40 @@
           text-align: center;
           margin-top: 50px;
          }
+
+      
+
+        #supp {
+            text-align: center;
+            border-radius: 5px;
+            padding: 5px;
+            background-color: #ff0000;
+            color: white;
+            text-decoration: none;
+            border: none;
+        }
+        
+        #modifButton {
+            text-align: center;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            padding: 5px;
+            background-color: #0099ff;
+            color: white;
+            text-decoration: none;
+            border: none;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        #supp, #modifButton {
+            cursor: pointer;
+        }
+        
     </style>
 </head>
 <body>
@@ -77,10 +111,13 @@
                         {% if event.end.dateTime %}
                             <div><strong>Date de fin :</strong> {{ event.end.dateTime}}</div>
                         {% endif %}
-                        <form action="{{ url_for('delete_event', event_id=event.id) }}" method="post">
-                            <input type="submit" value="Supprimer">
-                        </form>
-                        <a href="{{ url_for('edit_event', event_id=event.id) }}">Modifier</a>
+                        <div class="button-container">
+                            <form action="{{ url_for('delete_event', event_id=event.id) }}" method="post">
+                                <input id="supp"  type="submit" value="Supprimer">
+                            </form>
+                            <button id="modifButton"  onclick="window.location.href='{{ url_for('edit_event', event_id=event.id) }}'">Modifier</button>
+                        </div>
+                        
                     {% endif %}
                 </li>
             {% endfor %}
