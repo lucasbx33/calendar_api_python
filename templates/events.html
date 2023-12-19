@@ -92,50 +92,55 @@
         #supp, #modifButton {
             cursor: pointer;
         }
+
+        main{
+            min-height: 85vh;
+        }
         
     </style>
 </head>
 <body>
-    <h1>Événements à venir dans votre Google Calendar</h1>
-    {% if events %}
-        <ul>
-            {% for event in events %}
-                <li>
-                    {% if event.start.dateTime == null and event.end.dateTime == null %}
-                        <h3><strong>{{ event.summary }}</strong></h3>
-                    {% else %}
-                        <h3><strong>{{ event.summary }}</strong></h3>
-                        {% if event.start.dateTime %}
-                            <div><strong>Date de début :</strong> {{ event.start.dateTime}}</div>
+    <main>
+        <h1>Événements à venir dans votre Google Calendar</h1>
+        {% if events %}
+            <ul>
+                {% for event in events %}
+                    <li>
+                        {% if event.start.dateTime == null and event.end.dateTime == null %}
+                            <h3><strong>{{ event.summary }}</strong></h3>
+                        {% else %}
+                            <h3><strong>{{ event.summary }}</strong></h3>
+                            {% if event.start.dateTime %}
+                                <div><strong>Date de début :</strong> {{ event.start.dateTime}}</div>
+                            {% endif %}
+                            {% if event.end.dateTime %}
+                                <div><strong>Date de fin :</strong> {{ event.end.dateTime}}</div>
+                            {% endif %}
+                            <div class="button-container">
+                                <form action="{{ url_for('delete_event', event_id=event.id) }}" method="post">
+                                    <input id="supp"  type="submit" value="Supprimer">
+                                </form>
+                                <button id="modifButton"  onclick="window.location.href='{{ url_for('edit_event', event_id=event.id) }}'">Modifier</button>
+                            </div>
+                            
                         {% endif %}
-                        {% if event.end.dateTime %}
-                            <div><strong>Date de fin :</strong> {{ event.end.dateTime}}</div>
-                        {% endif %}
-                        <div class="button-container">
-                            <form action="{{ url_for('delete_event', event_id=event.id) }}" method="post">
-                                <input id="supp"  type="submit" value="Supprimer">
-                            </form>
-                            <button id="modifButton"  onclick="window.location.href='{{ url_for('edit_event', event_id=event.id) }}'">Modifier</button>
-                        </div>
-                        
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>Aucun événement à venir trouvé.</p>
-    {% endif %}
-    <h1>Créer un événement</h1>
-    <form action="{{ url_for('create_event') }}" method="post">
-        <label for="title">Titre de l'événement :</label>
-        <input type="text" id="title" name="title" required>
-    <br>
-        <label for="date">Date de l'événement :</label>
-        <input type="datetime-local" id="date" name="date" required>
-    <br>
-        <input id="event" type="submit" value="Créer l'événement">
-    </form>
-
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Aucun événement à venir trouvé.</p>
+        {% endif %}
+        <h1>Créer un événement</h1>
+        <form action="{{ url_for('create_event') }}" method="post">
+            <label for="title">Titre de l'événement :</label>
+            <input type="text" id="title" name="title" required>
+        <br>
+            <label for="date">Date de l'événement :</label>
+            <input type="datetime-local" id="date" name="date" required>
+        <br>
+            <input id="event" type="submit" value="Créer l'événement">
+        </form>
+    </main>
     <footer>
         <p>Ce site a été créé par <strong>JARDY Anthony</strong> & <strong>REYNAUD Lucas</strong></p>
         <p>Projet de développement Python 2023.</p>
