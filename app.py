@@ -9,6 +9,15 @@ from pathlib import Path
 secret_path = Path(__file__).resolve().parent / "client_secret.json"
 
 app = Flask(__name__)
+
+def date_to_datetime_local(date_str):
+    if date_str:
+        date_obj = datetime.datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S%z')
+        return date_obj.strftime('%Y-%m-%dT%H:%M')
+    return ''
+
+app.jinja_env.filters['date_to_datetime_local'] = date_to_datetime_local
+
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 
@@ -56,7 +65,7 @@ def oauth2callback():
 
 @app.route('/show_events')
 def show_events():
-    # Reconstituer l'objet Credentials à partir des données de la session
+
     credentials = google_credentials.Credentials(
         **session['credentials'])
 
@@ -92,22 +101,22 @@ def list_upcoming_events(service, max_results=10):
             event['start']['dateTime'] = format_date(event['start']['dateTime'])
         if 'dateTime' in event['end']:
             event['end']['dateTime'] = format_date(event['end']['dateTime'])
+        event['id'] = event.get('id')
 
     return events
 
 @app.route('/create_event', methods=['POST'])
 def create_event():
-    # Vérifiez si l'utilisateur est connecté
+
     if 'credentials' not in session:
         return redirect(url_for('login'))
 
-    #récupérer 
     title = request.form.get('title')
     start_date_str = request.form.get('date')
 
     # Convertir la date au format attendu par Google Calendar
     start_datetime = datetime.datetime.fromisoformat(start_date_str)
-    end_datetime = start_datetime + datetime.timedelta(hours=1)  # Ajoutez une durée par défaut
+    end_datetime = start_datetime + datetime.timedelta(hours=1)  # durée par défaut
 
     event = {
         'summary': title,
@@ -115,10 +124,68 @@ def create_event():
         'end': {'dateTime': end_datetime.isoformat(), 'timeZone': 'Europe/Paris'}
     }
 
-    # créer l'événement via l'api
+    #créer l'événement via l'api
     credentials = google_credentials.Credentials(**session['credentials'])
     service = create_calendar_service(credentials)
     service.events().insert(calendarId='primary', body=event).execute()
+
+    return redirect(url_for('show_events'))
+
+@app.route('/delete_event/<event_id>', methods=['POST'])
+def delete_event(event_id):
+
+    if 'credentials' not in session:
+        return redirect(url_for('login'))
+
+    credentials = google_credentials.Credentials(**session['credentials'])
+    service = create_calendar_service(credentials)
+
+    #supprimer l'événement
+    try:
+        service.events().delete(calendarId='primary', eventId=event_id).execute()
+    except Exception as e:
+        #gérer les exceptions, par exemple, l'événement n'existe pas
+        print(e)
+
+    return redirect(url_for('show_events'))
+
+@app.route('/edit_event/<event_id>', methods=['GET'])
+def edit_event(event_id):
+    if 'credentials' not in session:
+        return redirect(url_for('login'))
+
+    credentials = google_credentials.Credentials(**session['credentials'])
+    service = create_calendar_service(credentials)
+
+    # Récupérer les détails de l'événement
+    event = service.events().get(calendarId='primary', eventId=event_id).execute()
+
+    return render_template('edit_event.html', event=event)
+
+@app.route('/update_event/<event_id>', methods=['POST'])
+def update_event(event_id):
+    if 'credentials' not in session:
+        return redirect(url_for('login'))
+
+    #récupérer les éléments du formulaire
+    title = request.form.get('title')
+    start_date_str = request.form.get('date')
+
+    #convertir au format attendu
+    start_datetime = datetime.datetime.fromisoformat(start_date_str)
+    end_datetime = start_datetime + datetime.timedelta(hours=1)  # durée par défaut
+
+    credentials = google_credentials.Credentials(**session['credentials'])
+    service = create_calendar_service(credentials)
+
+    # recup l'existant et mettre à jour avec les nouvelles données
+    event = service.events().get(calendarId='primary', eventId=event_id).execute()
+    event['summary'] = title
+    event['start']['dateTime'] = start_datetime.isoformat()
+    event['end']['dateTime'] = end_datetime.isoformat()
+
+    # Mettre à jour le calendar
+    updated_event = service.events().update(calendarId='primary', eventId=event_id, body=event).execute()
 
     return redirect(url_for('show_events'))
 

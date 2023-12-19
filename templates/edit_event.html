@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>edit_event</title>
+</head>
+<body>
+<form action="{{ url_for('update_event', event_id=event.id) }}" method="post">
+    <label for="title">Titre de l'événement :</label>
+    <input type="text" id="title" name="title" value="{{ event.summary }}" required>
+    <label for="date">Date de l'événement :</label>
+    <input type="datetime-local" id="date" name="date" value="{{ event.start.dateTime|date_to_datetime_local }}" required>
+    <input type="submit" value="Mettre à jour l'événement">
+</form>
+
+</body>
+</html>
