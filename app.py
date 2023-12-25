@@ -21,7 +21,6 @@ app.jinja_env.filters['date_to_datetime_local'] = date_to_datetime_local
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 
-# Générer une clé secrète forte
 app.secret_key = os.urandom(24)
 
 @app.route("/")
@@ -114,9 +113,8 @@ def create_event():
     title = request.form.get('title')
     start_date_str = request.form.get('date')
 
-    # Convertir la date au format attendu par Google Calendar
     start_datetime = datetime.datetime.fromisoformat(start_date_str)
-    end_datetime = start_datetime + datetime.timedelta(hours=1)  # durée par défaut
+    end_datetime = start_datetime + datetime.timedelta(hours=1)  #durée par défaut, on peut modifier la durée de l'événement
 
     event = {
         'summary': title,
@@ -124,7 +122,7 @@ def create_event():
         'end': {'dateTime': end_datetime.isoformat(), 'timeZone': 'Europe/Paris'}
     }
 
-    #créer l'événement via l'api
+    #créer l'événement via l'api google
     credentials = google_credentials.Credentials(**session['credentials'])
     service = create_calendar_service(credentials)
     service.events().insert(calendarId='primary', body=event).execute()
@@ -144,7 +142,6 @@ def delete_event(event_id):
     try:
         service.events().delete(calendarId='primary', eventId=event_id).execute()
     except Exception as e:
-        #gérer les exceptions, par exemple, l'événement n'existe pas
         print(e)
 
     return redirect(url_for('show_events'))
@@ -157,7 +154,7 @@ def edit_event(event_id):
     credentials = google_credentials.Credentials(**session['credentials'])
     service = create_calendar_service(credentials)
 
-    # Récupérer les détails de l'événement
+    #récup données événement
     event = service.events().get(calendarId='primary', eventId=event_id).execute()
 
     return render_template('edit_event.html', event=event)
@@ -167,7 +164,7 @@ def update_event(event_id):
     if 'credentials' not in session:
         return redirect(url_for('login'))
 
-    #récupérer les éléments du formulaire
+    #récupérer données formulaire
     title = request.form.get('title')
     start_date_str = request.form.get('date')
 
@@ -178,13 +175,12 @@ def update_event(event_id):
     credentials = google_credentials.Credentials(**session['credentials'])
     service = create_calendar_service(credentials)
 
-    # recup l'existant et mettre à jour avec les nouvelles données
+    #update les données existantes
     event = service.events().get(calendarId='primary', eventId=event_id).execute()
     event['summary'] = title
     event['start']['dateTime'] = start_datetime.isoformat()
     event['end']['dateTime'] = end_datetime.isoformat()
 
-    # Mettre à jour le calendar
     updated_event = service.events().update(calendarId='primary', eventId=event_id, body=event).execute()
 
     return redirect(url_for('show_events'))
