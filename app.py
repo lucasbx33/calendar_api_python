@@ -170,7 +170,7 @@ def update_event(event_id):
 
     #convertir au format attendu
     start_datetime = datetime.datetime.fromisoformat(start_date_str)
-    end_datetime = start_datetime + datetime.timedelta(hours=1)  # durée par défaut
+    end_datetime = start_datetime + datetime.timedelta(hours=1)  #durée par défaut
 
     credentials = google_credentials.Credentials(**session['credentials'])
     service = create_calendar_service(credentials)
