@@ -1,15 +1,22 @@
-# calendar_api_python
+# Projet Calendrier API Python
 
-Fait par  REYNAUD Lucas et JARDY Anthony
+**Développeurs :** REYNAUD Lucas et JARDY Anthony
 
-Notre projet va consister à ce qu'on puisse se connecter à nos emplois du temps Google, on va pouvoir récupérer les dates où il va y avoir un événement.
-On aura une case avec le titre de l'événement, la date prévue pour et les horaires.
-Il y aura la possibilité de modification et de suppression directe depuis l'affichage.
-Ensuite en bas de page nous aurons la possibilité d'ajout d'un nouvel événement, et il s'ajoutera notre agenda . 
+## Description du Projet
 
-Les quelques consignes avant de commencer a essayer de faire fonctionner notre projet.
-Il faut installer les dépendances avec la commande suivante :
+Ce projet permet une interaction directe avec Google Calendar. Les utilisateurs peuvent se connecter à leur agenda Google et accéder à leurs événements programmés. L'application offre plusieurs fonctionnalités :
 
-pip install -r requirements.txt
+- **Affichage des Événements :** Chaque événement est présenté avec son titre, sa date, et ses horaires.
+- **Modification et Suppression :** Les utilisateurs peuvent modifier ou supprimer des événements directement depuis l'interface.
+- **Ajout d’Événements :** Un formulaire en bas de page permet d'ajouter de nouveaux événements qui seront synchronisés avec l'agenda Google.
 
-Le serveur doit tourner en localhost ou en http://127.0.0.1:5000/
+## Instructions d'Installation
+
+Avant de commencer à utiliser l'application, veuillez suivre ces étapes :
+
+1. **Installation des Dépendances :** Exécutez `pip install -r requirements.txt` pour installer toutes les dépendances nécessaires.
+2. **Configuration du Serveur :** Le serveur local doit impérativement être lancé à l'adresse `http://127.0.0.1:5000/`. Cette adresse IP et port spécifiques sont requis car la connexion à Google pour ce projet n'est autorisée que pour cette IP.
+
+## Démarrage de l'Application
+
+Pour démarrer l'application, lancez le serveur sur `http://127.0.0.1:5000/` et connectez-vous avec vos identifiants Google pour accéder à votre agenda.
